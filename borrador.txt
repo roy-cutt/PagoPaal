@@ -1,0 +1,227 @@
+create database autx;
+
+use autx;
+
+create table productos(
+	Id_producto int not null auto_increment,
+	tipo_producto int(10)NOT null,
+	nom_producto varchar(60),
+	Precio_producto double not null,
+	Fecha_vencimiento_producto date,
+	Descripcion_producto varchar(100),
+	Stock_producto int(12) not null,
+	Foto text not null,
+	primary key(Id_producto)
+);
+
+create table cliente(
+	Id_cliente int not null auto_increment,
+	Nombre_cliente varchar(30),
+	AP_paterno varchar(30),
+	AP_materno varchar(30),
+	Usuario_cliente varchar(20),
+	Password_cliente varchar(16),
+	Telefono_cliente varchar(10),
+	Correo_cliente varchar(60),
+	Direccion_cliente varchar(60),
+	primary key(Id_cliente)
+);
+
+CREATE TABLE compras(
+   idCompras int not null auto_increment,
+   idCliente int(11) UNSIGNED NOT NULL,
+   idPago int(11) UNSIGNED NOT NULL,
+   FechaCompras varchar(11),
+   Monto double not null,
+   Estado varchar(50),
+   primary key(idCompras)
+  	
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+CREATE TABLE detalle_compras (
+   idDetalle int not null auto_increment,
+   idProducto int(11) UNSIGNED NOT NULL,
+   idCompras int(11) UNSIGNED NOT NULL,
+   Cantidad int(11) UNSIGNED DEFAULT NULL,
+   PrecioCompra double not null,
+   primary key(idDetalle)
+   
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+CREATE TABLE `pago` (
+  `idPago` int(11) UNSIGNED NOT NULL,
+  `Monto` double DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+
+Controlador?accion=home
+
+Mis web0s dicen que simón
+
+https://github.com/SebastianCScc/CarrodecomprasJSP/blob/master/build/web/carrito.jsp
+
+
+ALTER TABLE `compras`
+  ADD PRIMARY KEY (`idCompras`),
+  ADD KEY `Compras_FKIndex1` (`idPago`),
+  ADD KEY `Compras_FKIndex2` (`idCliente`);
+
+ALTER TABLE `detalle_compras`
+  ADD PRIMARY KEY (`idDetalle`,`idProducto`,`idCompras`),
+  ADD KEY `Producto_has_Compras_FKIndex1` (`idProducto`),
+  ADD KEY `Producto_has_Compras_FKIndex2` (`idCompras`);
+
+ALTER TABLE `compras`
+  ADD CONSTRAINT `compras_ibfk_1` FOREIGN KEY (`idPago`) REFERENCES `pago` (`idPago`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  ADD CONSTRAINT `compras_ibfk_2` FOREIGN KEY (`idCliente`) REFERENCES `cliente` (`idCliente`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+
+ALTER TABLE `detalle_compras`
+  ADD CONSTRAINT `detalle_compras_ibfk_1` FOREIGN KEY (`idProducto`) REFERENCES `producto` (`idProducto`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  ADD CONSTRAINT `detalle_compras_ibfk_2` FOREIGN KEY (`idCompras`) REFERENCES `compras` (`idCompras`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+
+
+
+insert into productos(Id_tipo_producto, nom_producto, Precio_producto, Fecha_vencimiento_producto, Descripcion_producto, Stock_producto) values('aww12', 'jabon', 33.5, '2021-07-15', 'jabon muy jabon', 13);
+
+insert into productos(Id_tipo_producto, nom_producto, Precio_producto, Fecha_vencimiento_producto, Descripcion_producto, Stock_producto) values('aww33', 'papas', 12.14, '2021-10-15', 'papas muy papas', 5);
+
+Carrito_autX/productos_autx/blakk.jpg
+Carrito_autX/productos_autx/cubrrr.jpg
+
+Foto longBLOB not null
+rs.getBytes();
+ps.setBlob();
+
+Carrito_autX\src\java\images\blakk.jpg
+SELECT Foto FROM productos
+
+ArrayList <Imagen> getImagenes() {
+ ArrayList <Imagen> lista = new ArrayList();
+ try {
+ ResultSet rs = st.executeQuery("SELECT imagen,nombre FROM Imagenes"); 
+ while (rs.next())
+ {
+ Imagen imagen=new Imagen();
+ Blob blob = rs.getBlob("imagen");
+ String nombre = rs.getObject("nombre").toString();
+ byte[] data = blob.getBytes(1, (int)blob.length());
+ BufferedImage img = null;
+ try {
+ img = ImageIO.read(new ByteArrayInputStream(data));
+ } catch (IOException ex) {
+ Logger.getLogger(BaseDatos.class.getName()).log(Level.SEVERE, null, ex);
+ }
+ 
+ imagen.setImagen(img);
+ imagen.setNombre(nombre);
+ lista.add(imagen);
+ }
+ rs.close();
+ } catch (SQLException ex) {
+ Logger.getLogger(BaseDatos.class.getName()).log(Level.SEVERE, null, ex);
+ }
+ return lista;
+}
+
+CREATE TABLE `cliente` (
+  `idCliente` int(11) UNSIGNED NOT NULL,
+  `Dni` varchar(9) DEFAULT NULL,
+  `Nombres` varchar(255) DEFAULT NULL,
+  `Direccion` varchar(255) DEFAULT NULL,
+  `Email` varchar(255) DEFAULT NULL,
+  `Password` varchar(20) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+CREATE TABLE `compras` (
+  `idCompras` int(11) UNSIGNED NOT NULL,
+  `idCliente` int(11) UNSIGNED NOT NULL,
+  `idPago` int(11) UNSIGNED NOT NULL,
+  `FechaCompras` varchar(11) DEFAULT NULL,
+  `Monto` double DEFAULT NULL,
+  `Estado` varchar(50) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+CREATE TABLE `detalle_compras` (
+  `idDetalle` int(10) UNSIGNED NOT NULL,
+  `idProducto` int(11) UNSIGNED NOT NULL,
+  `idCompras` int(11) UNSIGNED NOT NULL,
+  `Cantidad` int(11) UNSIGNED DEFAULT NULL,
+  `PrecioCompra` double DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+CREATE TABLE `pago` (
+  `idPago` int(11) UNSIGNED NOT NULL,
+  `Monto` double DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+CREATE TABLE `producto` (
+  `idProducto` int(11) UNSIGNED NOT NULL,
+  `Nombres` varchar(255) DEFAULT NULL,
+  `Foto` longblob,
+  `Descripcion` varchar(255) DEFAULT NULL,
+  `Precio` double DEFAULT NULL,
+  `Stock` int(11) UNSIGNED DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+ALTER TABLE `cliente`
+  ADD PRIMARY KEY (`idCliente`);
+
+ALTER TABLE `compras`
+  ADD PRIMARY KEY (`idCompras`),
+  ADD KEY `Compras_FKIndex1` (`idPago`),
+  ADD KEY `Compras_FKIndex2` (`idCliente`);
+
+ALTER TABLE `detalle_compras`
+  ADD PRIMARY KEY (`idDetalle`,`idProducto`,`idCompras`),
+  ADD KEY `Producto_has_Compras_FKIndex1` (`idProducto`),
+  ADD KEY `Producto_has_Compras_FKIndex2` (`idCompras`);
+
+ALTER TABLE `pago`
+  ADD PRIMARY KEY (`idPago`);
+
+ALTER TABLE `producto`
+  ADD PRIMARY KEY (`idProducto`);
+
+ALTER TABLE `cliente`
+  MODIFY `idCliente` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
+
+ALTER TABLE `compras`
+  MODIFY `idCompras` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
+
+ALTER TABLE `detalle_compras`
+  MODIFY `idDetalle` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=36;
+
+ALTER TABLE `pago`
+  MODIFY `idPago` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=19;
+
+ALTER TABLE `producto`
+  MODIFY `idProducto` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+
+ALTER TABLE `compras`
+  ADD CONSTRAINT `compras_ibfk_1` FOREIGN KEY (`idPago`) REFERENCES `pago` (`idPago`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  ADD CONSTRAINT `compras_ibfk_2` FOREIGN KEY (`idCliente`) REFERENCES `cliente` (`idCliente`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+
+ALTER TABLE `detalle_compras`
+  ADD CONSTRAINT `detalle_compras_ibfk_1` FOREIGN KEY (`idProducto`) REFERENCES `producto` (`idProducto`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  ADD CONSTRAINT `detalle_compras_ibfk_2` FOREIGN KEY (`idCompras`) REFERENCES `compras` (`idCompras`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+
+
+
+DATOS DE PRUEBA DE TARJETA PAGOS
+
+Julian Gerardo
+López Martínez
+julian.martinez@gmail.com
+4421432915
+Queretaro
+MX
+Queretaro
+79125
+Av. Pie de la cuesta #12
+Desarrollo San Pablo
+Qro. Qro.
+
+4111111111111111	Visa	BANAMEX
+5105105105105100	MasterCard	SCOTIABANK
+
+
